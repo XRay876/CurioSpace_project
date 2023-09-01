@@ -1,0 +1,278 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}ProjectManager{% endblock %}
+
+{% block content %}
+
+
+    <div class="features">
+        <h1 class="DataBase_title">База данных</h1>
+    
+
+    
+        <form method="get" action="{% url 'home' %}" id="index-form">
+            <div class="form-fields_index">
+                <div class="select-container">
+                    <select name="table" id="table-select" class="form-input-tablename" onchange="submitForm()">
+                        <option value="fill_TODO" {% if selected_table == 'fill_TODO' %}selected{% endif %}>0_TODO</option>
+                        <option value="System" {% if selected_table == 'System' %}selected{% endif %}>1_Системы</option>
+                        <option value="Modules" {% if selected_table == 'Modules' %}selected{% endif %}>2_Модули</option>
+                        <option value="Products" {% if selected_table == 'Products' %}selected{% endif %}>Продукты</option>
+                        <option value="ArchLayout" {% if selected_table == 'ArchLayout' %}selected{% endif %}>ArchLayout</option>
+                        <option value="ProductsVeh" {% if selected_table == 'ProductsVeh' %}selected{% endif %}>Продукты Вехи</option>
+                        <option value="ProductsVnedr" {% if selected_table == 'ProductsVnedr' %}selected{% endif %}>Продукты Внедрения</option>
+                        <option value="Resources" {% if selected_table == 'Resources' %}selected{% endif %}>Ресурсы</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+
+        <div id="table-container" class="table-container">
+            <table>
+                <thead>
+                    {% if selected_table == 'fill_TODO' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код</th>
+                            <th>Задача</th>
+                            <th>Имя</th>
+                        </tr>
+                    {% elif selected_table == 'System' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код ИС</th>
+                            <th>Полное наименование</th>
+                            <th>Код Организации</th>
+                        </tr>
+                    {% elif selected_table == 'Modules' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Короткое название</th>
+                            <th>Полное название</th>
+                            <th>Система</th>
+                            <th>Код Package</th>
+                            <th>id</th>
+                            <th>Construction</th>
+                            <th>Stage</th>
+                        </tr>
+                    {% elif selected_table == 'Products' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код</th>
+                            <th>Type</th>
+                            <th>Component A</th>
+                            <th>Component B</th>
+                            <th>LinkedProducts</th>
+                            <th>Название</th>
+                            <th>Статус</th>
+                            <th>Команда</th>
+                            <th>РП</th>
+                            <th>Дата начала</th>
+                            <th>Дата окончания</th>
+                            <th>Заказчик</th>
+                            <th class="Notes">Notes</th>
+                            <th>Документация</th>
+                            <th>Construction</th>
+                            <th>Предок</th>
+                            <th>LinkProject</th>
+                        </tr>
+                    {% elif selected_table == 'ArchLayout' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код</th>
+                            <th>sys_A</th>
+                            <th>link</th>
+                            <th>sys_B</th>
+                        </tr>
+                    {% elif selected_table == 'ProductsVeh' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>ProductID</th>
+                            <th>Type</th>
+                            <th class="Notes">Description</th>
+                            <th>Документ основание</th>
+                            <th>Подтверждающий документ</th>
+                            <th>Priority</th>
+                            <th>Closed</th>
+                        </tr>
+                    {% elif selected_table == 'ProductsVnedr' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код</th>
+                            <th>Component A</th>
+                            <th>Component B</th>
+                            <th>LinkedProducts</th>
+                            <th>Название</th>
+                            <th>Статус</th>
+                            <th>Команда</th>
+                            <th>РП</th>
+                            <th>Дата начала</th>
+                            <th>Окончание</th>
+                            <th>Заказчик</th>
+                            <th class="Notes">Notes</th>
+                            <th>Документация</th>
+                            <th>PlantUML</th>
+                            <th>_статус</th>
+                            <th>Construction</th>
+                            <th>Предшественник</th>
+                            <th>LinkProject</th>
+                        </tr>
+                    {% elif selected_table == 'Resources' %}
+                        <tr>
+                            <th class="delete-column"></th>
+                            <th>Код</th>
+                            <th>ФИО</th>
+                            <th>Роль в проетке</th>
+                            <th>Лидер</th>
+                            <th>Команда</th>
+                            <th>Статус</th>
+                            <th>Репорт</th>
+                        </tr>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% for item in table_data %}
+                        <tr>
+                            <td class="delete-column">
+                                <form method="post" action="{% url 'delete_item' table=selected_table item_id=item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-button">Удалить</button>
+                                </form>
+                                <a href="{% url 'edit_item' table=selected_table item_id=item.id%}"><button type="button" class="edit-button"><svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" clip-rule="evenodd"></path>
+                                  </svg>Редактировать</button></a>
+                                
+                            </td>
+                            
+                            
+                            {% if selected_table == 'fill_TODO' %}
+                                <td>{{ item.uid }}</td>
+                                <td>{{ item.utask }}</td>
+                                <td>{{ item.uname }}</td>
+                            {% elif selected_table == 'System' %}
+                                <td>{{ item.uCodeIS }}</td>
+                                <td>{{ item.uFullName }}</td>
+                                <td>{{ item.uOrgCode }}</td>
+                            {% elif selected_table == 'Modules' %}
+                                <td>{{ item.uShortName }}</td>
+                                <td>{{ item.uLongName }}</td>
+                                <td>{{ item.uSystem }}</td>
+                                <td>{{ item.uCodePackage }}</td>
+                                <td>{{ item.uModulesID }}</td>
+                                <td>{{ item.uConstruction }}</td>
+                                <td>{{ item.uStage }}</td>
+                            {% elif selected_table == 'Products' %}
+                                <td>{{ item.uID }}</td>
+                                <td>{{ item.uType }}</td>
+                                <td>{{ item.uComponentA }}</td>
+                                <td>{{ item.uComponentB }}</td>
+                                <td>{{ item.uLinkedProducts }}</td>
+                                <td>{{ item.uName }}</td>
+                                <td>{{ item.uStatus }}</td>
+                                <td>{{ item.uComand }}</td>
+                                <td>{{ item.uRP }}</td>
+                                <td>{{ item.uStartTime }}</td>
+                                <td>{{ item.uStopTime }}</td>
+                                <td>{{ item.uCustomer }}</td>
+                                <td class="Notes">{{ item.uNotes }}</td>
+                                <td>{{ item.uDocumentation }}</td>
+                                <td>{{ item.uConstruction }}</td>
+                                <td>{{ item.uAncestor }}</td>
+                                <td>{{ item.uLinkProject }}</td>
+                            {% elif selected_table == 'ArchLayout' %}
+                                <td>{{ item.uArchID }}</td>
+                                <td>{{ item.uSys_A }}</td>
+                                <td>{{ item.uArchLink }}</td>
+                                <td>{{ item.uSys_B }}</td>
+                            {% elif selected_table == 'ProductsVeh' %}
+                                <td>{{ item.uVehID }}</td>
+                                <td>{{ item.uVehDate }}</td>
+                                <td>{{ item.uVehProductID }}</td>
+                                <td>{{ item.uVehType }}</td>
+                                <td class="Notes">{{ item.uVehDescription }}</td>
+                                <td>{{ item.uVehBaseDoc }}</td>
+                                <td>{{ item.uVehSubmDoc }}</td>
+                                <td>{{ item.uVehPriority }}</td>
+                                <td>{% if item.uVehClosed %}✓{% else %} {% endif %}</td>
+                            {% elif selected_table == 'ProductsVnedr' %}
+                                <td>{{ item.uVnedrID }}</td>
+                                <td>{{ item.uVnedrComponentA }}</td>
+                                <td>{{ item.uVnedrComponentB }}</td>
+                                <td>{{ item.uVnedrLinkedProducts }}</td>
+                                <td>{{ item.uVnedrName }}</td>
+                                <td>{{ item.uVnedrStatus }}</td>
+                                <td>{{ item.uVnedrComand }}</td>
+                                <td>{{ item.uVnedrRP }}</td>
+                                <td>{{ item.uVnedrStartTime }}</td>
+                                <td>{{ item.uVnedrStopTime }}</td>
+                                <td>{{ item.uVnedrCustomer }}</td>
+                                <td class="Notes">{{ item.uVnedrNotes }}</td>
+                                <td>{{ item.uVnedrDocumentation }}</td>
+                                <td>{{ item.uVnedrPlantUML }}</td>
+                                <td>{{ item.uVnedr_Status }}</td>
+                                <td>{{ item.uVnedrConstruction }}</td>
+                                <td>{{ item.uVnedrAncestor }}</td>
+                                <td>{{ item.uVnedrLinkProject }}</td>
+                            {% elif selected_table == 'Resources' %}
+                                <td>{{ item.uResID }}</td>
+                                <td>{{ item.uResName }}</td>
+                                <td>{{ item.uResRole }}</td>
+                                <td>{% if item.uResLeader %}✓{% else %} {% endif %}</td>
+                                <td>{{ item.uResComand }}</td>
+                                <td>{{ item.uResCheck }}</td>
+                                <td>{{ item.uResReport }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+  
+    </div>
+    
+
+    <script>
+        function submitForm() {
+            document.getElementById('index-form').submit();
+        }
+    </script>
+
+    <script>
+
+        const tableSelect = document.getElementById('table-select');
+        const tableContainer = document.getElementById('table-container');
+
+        
+        
+
+    </script>
+
+
+    <script>
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const form = this.closest('form');
+                const tableRow = this.closest('tr');
+
+                tableRow.classList.add('delete-animation');
+
+                setTimeout(function() {
+                    form.submit();
+                }, 300);
+            });
+        });
+    </script>
+{% endblock %}
+
+
+
+

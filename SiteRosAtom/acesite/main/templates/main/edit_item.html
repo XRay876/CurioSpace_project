@@ -1,0 +1,28 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Edit{% endblock %}
+
+{% block content %}
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="edit-close">&times;</span>
+            <h2 class="change-lable">Редактирование</h2>
+            <form id="edit-form-modal" method="post" action="">
+                {% csrf_token %}
+                <div id="edit-form-fields" class="edit-form-fields">
+                    {{ edit_form.as_p }}
+                </div>
+                <div class="edit-item-buttons">
+                    <button type="submit" class="change-button">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("edit-close").addEventListener("click", function() {
+            window.location.href = "{% url 'home' %}?table={{ selected_table }}";
+        });
+    </script>
+
+{% endblock %}

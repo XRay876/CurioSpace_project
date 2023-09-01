@@ -1,0 +1,600 @@
+*  {
+    box-sizing: border-box;   
+    
+}
+
+html {
+    width: 100%;
+    height: 100%;
+} 
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px; 
+    background-color: #eee !important
+}
+
+aside {
+    float: left;
+    background: #fff;
+    width: 20%;
+    padding: 2.5%;
+    height: 100vh;
+}
+
+aside img {
+    height: 72px;
+    float: left;
+    padding-left: 10%;
+}
+
+.image_ase {
+    display: flex;
+    justify-content: center;
+    
+}
+
+aside .logo {
+    font-size: 40px;
+    margin-left: 10px;
+    font-weight: bold;
+    position: relative;
+    
+}
+
+aside h3 {
+    margin-top: 40px;
+    font-size: 34px;
+    display: flex;
+    justify-content: center;
+
+}
+
+aside ul {
+    list-style: none;
+    
+}
+
+aside ul li {
+    font-weight: bold;
+    display: block;
+    margin-top: 20px;
+    transition: all .6s ease;
+}
+
+aside ul li:hover, aside ul a:hover {
+    color: darkblue;
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+
+
+main .features {
+    float: left;
+    color: rgb(3,29,86);
+    margin-top: 5vh;
+    text-align: center;
+    width: 80%;
+    
+    
+}
+
+.filling_form {
+    padding-top: 20px;
+}
+
+.form-row {
+    margin-bottom: 10px;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+}
+
+.form-label {
+    display: inline-block;
+    width: 120px;
+}
+
+.form-input {
+    width: 500px;
+}
+
+.form-input-tablename {
+    width: 200px;
+}
+
+.form-fields {
+    margin-bottom: 10px;
+}
+
+.form-fields p {
+    margin: 5px 0;
+}
+
+.form-input-tablename {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-submit {
+    padding: 10px 20px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+.DataBase_title {
+    text-align: center;
+}
+
+
+.table-container {
+    overflow-x: auto;
+    /* max-height: 95vh; */
+    height: calc(95vh - 100px);
+    max-width: 100%;
+    position: relative;
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-container thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+  }
+  
+  .table-container tbody {
+    overflow-y: auto;
+    margin-top: 5px; 
+  }
+  
+
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    min-width: 120px;
+    
+}
+
+
+table th.delete-column, table td.delete-column {
+    min-width: 170px !important;
+    max-width: 180px !important; 
+}
+
+th.Notes, td.Notes {
+    min-width: 400px;
+    max-width: 900px !important;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+td {
+    word-break: break-word; 
+}
+
+
+.features_about {
+    display: flex;
+    justify-content: center;
+
+    float: left;
+    color: rgb(3,29,86);
+    margin-top: 100px;
+    text-align: center;
+    width: 80%;
+    
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-fields label {
+    margin-bottom: 5px;
+    width: 150px;
+}
+
+.form-fields input,
+.form-fields select {
+    margin-bottom: 10px;
+    width: 200px;
+}
+
+
+.form-fields_index {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-fields_index .select-container {
+    margin-right: 10px; 
+}
+
+.form-fields .button-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.line-row-diagram {
+    border-top: 2px solid rgba(50, 50, 50, 0.3);
+}
+
+.delete-button {
+    background-color: rgba(183, 15, 3, 0.545);
+    padding: 5px 10px;
+    
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.edit-button {
+    background-color: rgba(4, 82, 108, 0.367);
+    margin-top: 3px;
+
+    padding: 5px 10px;
+    
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.new_comment {
+    background-color: rgba(4, 82, 108, 0.367);
+    margin-top: 3px;
+
+    padding: 3px 6px;
+    
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.show_log {
+    background-color: rgba(4, 82, 108, 0.367);
+    margin-top: 3px;
+
+    padding: 3px 6px;
+    
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.change-lable {
+    margin-bottom: 2vh;
+    
+
+}
+/*------------------------------------------------------------ Эффект удаление */ 
+.delete-animation {
+    animation-name: fadeOut;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+/*------------------------------------------------------------*/
+/* для цвета Отклонения в диаграмме */
+.deviation {
+    font-weight: bold;
+}
+
+.deviation_veh {
+    font-weight: 500;
+}
+
+.deviation-White {
+    color: black;
+}
+.deviation-LightBlue {
+    color: blue;
+}
+.deviation-LightGreen {
+    color: green;
+}
+
+.deviation-Green {
+    color: green;
+}
+
+.deviation-Red {
+    color: Red;
+}
+
+.deviation-Blue {
+    color: Blue;
+}
+/* ------------------------------------ */
+.hidden {
+    display: none;
+  }
+  
+/* после нажатия "+" */
+.toggle-button {
+    position: relative;
+    height: 30px;
+    transition: transform 0.3s ease; /* Добавляем анимацию перехода */
+  }
+  
+  .toggle-button.flipped {
+    transform: rotate(180deg); /* Переворачиваем стрелочку на 180 градусов */
+    color: grey;
+  }
+/* ------------------- */
+
+.popup-container {
+    display:none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Затемнение заднего фона */
+    z-index: 9999; /* Установите значение z-index, чтобы всплывающее окно было поверх других элементов */
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    opacity: 0;
+    position: relative;
+    transform: scale(0.8); /* Уменьшение размера окна до 80% */
+    transition: opacity 0.3s, transform 0.3s; /* Плавные анимации */
+    will-change: opacity, transform;
+}
+.popup-content .close {
+    position: absolute; /* Добавляем абсолютное позиционирование */
+    top: 6px; /* Регулируем отступ сверху */
+    right: 10px; /* Регулируем отступ справа */
+    
+}
+.popup-container.active {
+    display:flex;
+    opacity: 1;
+}
+
+.popup-container.active .popup-content {
+    opacity: 1;
+    transform: scale(1);
+    
+}
+
+/* ------- */
+
+.popup-container-log {
+    display:none;
+    
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Затемнение заднего фона */
+    z-index: 9999;
+
+}
+
+.popup-content-log {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    max-height: 60vh;
+    
+    opacity: 0;
+    
+    position: relative;
+    transform: scale(0.8); /* Уменьшение размера окна до 80% */
+    transition: opacity 0.3s, transform 0.3s; /* Плавные анимации */
+    will-change: opacity, transform;
+}
+.popup-content-log .close {
+    position: absolute; /* Добавляем абсолютное позиционирование */
+    top: 6px; /* Регулируем отступ сверху */
+    right: 10px; /* Регулируем отступ справа */
+    
+}
+.popup-container-log.active {
+    display:flex;
+    opacity: 1;
+}
+
+.popup-container-log.active .popup-content-log {
+    opacity: 1;
+    transform: scale(1);
+    
+}
+
+.table-container-log {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+.table-container-log-table {
+    width: 100%;
+    display: block;
+    
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 45vh;
+}
+
+.table-container-log-table th,
+.table-container-log-table td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* Окно редактирование */
+.modal {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    
+    
+}
+
+.modal-content {
+    background-color: #fefefe;
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    max-width: 30%;
+    max-height: 80vh;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+@media (max-width: 768px) {
+    .modal-content {
+        width: 80%; /* При маленьких экранах увеличьте ширину формы */
+    }
+}
+
+.modal-content input,
+.modal-content select {
+    margin-bottom: 10px;
+    width: 200px;
+}
+
+.close {
+    color: #aaa;
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.edit-form-fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-form-fields p {
+    margin-bottom: 10px;
+}
+
+
+/* ------------------------ */
+
+
+.success-notification {
+    display: none;
+    position: fixed;
+    
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #28a745;
+    padding: 10px;
+    color: #fff;
+    z-index: 9999;
+    animation: slide-down-up 2s ease-in-out;
+}
+
+.error-notification {
+    display: none;
+    position: fixed;
+    
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    z-index: 9999;
+    background-color: #dc3545;
+    animation: slide-down-up 2s ease-in-out;
+}
+
+@keyframes slide-down-up {
+    0% { top: -100px; opacity: 0; }
+    10% { top: 0; opacity: 1; }
+    90% { top: 0; opacity: 1; }
+    100% { top: -100px; opacity: 0; }
+}
+
+.notification-message {
+    margin: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-wrapper {
+    display: block; 
+    margin-bottom: 5px; 
+}
+
+

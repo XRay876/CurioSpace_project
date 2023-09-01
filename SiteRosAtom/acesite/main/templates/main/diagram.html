@@ -1,0 +1,65 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Diagrams{% endblock %}
+
+{% block content %}
+    <div class="features">
+        <h1>Дедлайны проектов</h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Организация</th>
+                        <th>Component A</th>
+                        <th>Процедура</th>
+                        <th>Продукт</th>
+                        <th>Дедлайн</th>
+                        <th>Отклонение</th>
+                        <th>Менеджер</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr class="line-row-diagram" {% if item.products %} onclick="toggleProducts(this, '{{ item.procedure }}')"  {% endif %}>
+                        <td>{{ item.organization }}</td>
+                        <td>{{ item.componentA }}</td>
+                        <td>{{ item.procedure }}</td>
+                        <td>
+                            {% if item.products %}
+                            <button class="toggle-button" >▼</button>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.deadline_product }}</td>
+                        <td class="deviation deviation-{{ item.deviation_color }}">{{ item.deviation_product }}</td>
+                        <td>{{ item.manager }}</td>
+                    </tr>
+                    {% for product in item.products %}
+                        <tr class="hidden product-row" data-parent="{{ item.procedure }}">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ product.product }}</td>
+                            <td>{{ product.deadline_veh }}</td>
+                            <td class="deviation_veh deviation-{{ product.deviation_color_veh }}">{{ product.deviation_veh }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function toggleProducts(button, procedure) { 
+            const productRows = document.querySelectorAll(`tr.product-row[data-parent="${procedure}"]`);
+            productRows.forEach((row) => row.classList.toggle('hidden'));
+
+            // button.classList.toggle('flipped');
+            const arrowButton = button.querySelector('.toggle-button');
+            const anyVisible = Array.from(productRows).some((row) => !row.classList.contains('hidden'));
+            arrowButton.classList.toggle('flipped', anyVisible);
+        }
+
+</script>
+{% endblock %}

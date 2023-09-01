@@ -1,0 +1,389 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Report{% endblock %}
+
+{% block content %}
+
+    <div class="features">
+        <h1>Отчеты</h1>
+
+        <form method="GET" action="{% url 'report' %}" id="report-form">
+            <div class="filter-container">
+                <label for="surname-filter">Выберите фамилию:</label>
+                <select id="surname-filter" name="surname" onchange="submitForm()">
+                    {% for surname in surnames %}
+                        <option value="{{ surname }}" {% if selected_surname == surname %}selected{% endif %}>{{ surname }}</option>
+                    {% endfor %}
+                </select>
+                
+            </div>
+        </form>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Продукта</th>
+                        <th>ID Вехи</th>
+                        <th>Дата последнего комментария</th>
+                        <th>Последний комментарий</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr class="line-row-diagram" {% if item.products %} onclick="toggleProducts(this, '{{ item.procedure }}')" {% endif %}>
+                        <td>{{ item.procedure }}</td>
+                        <td>
+                            {% if item.products %}
+                            <button class="toggle-button" >▼</button>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.last_comment_date|default:"Нет комментариев" }}</td>
+                        <td>{{ item.last_comment_text|default:"Нет комментариев" }}</td>
+                        <td>
+                            <div class="button-wrapper">
+                                <button id="commButton" type="submit" class="new_comment" data-product="{{ item.procedure }}" data-veh="">
+                                    Добавить комментарий
+                                </button>
+                            </div>
+
+                            <div class="button-wrapper">
+                                <button type="submit" class="show_log" data-product="{{ item.procedure }}" data-veh="">
+                                    Посмотреть все
+                                </button>
+                            </div>
+
+                            <div class="button-wrapper">
+                                <a href="{% url 'edit_comment' item_id=item.procedure_id class_veh_or_not='YES' %}" data-url="{% url 'report' %}"><button type="submit" class="edit-button" data-product="{{ item.procedure }}" data-veh="">
+                                    Редактировать
+                                </button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% for product in item.products %}
+                        <tr class="hidden product-row" data-parent="{{ item.procedure }}">
+                            <td></td>
+                            <td>{{ product.product }}</td>
+                            <td>{{ product.last_comment_date|default:"Нет комментариев" }}</td>
+                            <td>{{ product.last_comment_text|default:"Нет комментариев" }}</td>
+                            <td>
+                                <div class="button-wrapper">
+                                    <button id="commButton" type="submit" class="new_comment" data-product="{{ item.procedure }}" data-veh="{{ product.product }}">
+                                        Добавить комментарий
+                                    </button>
+                                </div>
+    
+                                <div class="button-wrapper">
+                                    <button type="submit" class="show_log" data-product="{{ item.procedure }}" data-veh="{{ product.product }}">
+                                        Посмотреть все
+                                    </button>
+                                </div>
+
+
+                                {% if product.product_id %}
+                                <div class="button-wrapper">
+                                    <a href="{% url 'edit_comment' item_id=product.product_id class_veh_or_not='NO' %}" data-url="{% url 'report' %}"><button type="submit" class="edit-button" data-product="{{ item.procedure }}" data-veh="{{ product.product }}">
+                                        Редактировать
+                                    </button>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+
+    <div class="popup-container-wrapper">
+        <div class="overlay"></div>
+        <div class="popup-container">
+            <div class="popup-content">
+                <span class="close" id="add-close">&times;</span>
+                <h3 class="add-lable" style="display: flex; justify-content: center;">Добавить комментарий</h3>
+                <form id="commentForm" method="post" action="{% url 'save_comment' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="uProductIDReport" id="uProductIDReportField" value="">
+                    <input type="hidden" name="uVehIDReport" id="uVehIDReportField" value="">
+                    <label for="commentInput">Комментарий:</label>
+                    <textarea name="text" id="commentInput" required rows="4" cols="50"></textarea>
+                    
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-container-wrapper-log">
+        <div class="overlay-log"></div>
+        <div class="popup-container-log">
+            <div class="popup-content-log">
+                <span class="close" id="log-close">&times;</span>
+                <h3 class="add-lable" style="display: flex; justify-content: center;">История комментариев</h3>
+                <div class="table-container-log">
+                <table class="table-container-log-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Комментарий</th>
+                        </tr>
+                    </thead>
+                    <tbody  id="comment-history-body">
+                        
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="form-errors">
+        {% if form_success %}
+            <div id="success-notification" class="notification success-notification">
+                <p class="notification-message">Форма успешно заполнена!</p>
+            </div>
+        {% else %}
+            <div id="error-notification" class="notification error-notification">
+                <p class="notification-message">Ошибка!</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function submitForm() {
+            document.getElementById('report-form').submit();
+        }
+    </script>
+
+    <script>
+
+        const popup = document.querySelector(".popup-container-wrapper");
+        const commentForm = document.getElementById("commentForm");
+        const uProductIDReportField = document.getElementById("uProductIDReportField");
+        const uVehIDReportField = document.getElementById("uVehIDReportField");
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Переменные для хранения выбранных ID (начально задаем null)
+            
+    
+            
+            // Функция для отображения всплывающего окна
+            function showPopup(uProductID, uVehID) {
+                uProductIDReportField.value = uProductID;
+                uVehIDReportField.value = uVehID;
+                
+
+                const popupContainer = document.querySelector('.popup-container');
+                const popupContent = document.querySelector('.popup-content');
+                popupContainer.style.display = 'flex';
+
+                // Выполнение анимации появления окна с помощью requestAnimationFrame
+                requestAnimationFrame(() => {
+                    popupContainer.classList.add('active');
+                    popupContent.style.opacity = 1;
+                    popupContent.style.transform = 'scale(1)';
+                });
+                
+                
+                
+            }
+
+            function isClickInsidePopup(event) {
+                const popupContainer = document.querySelector('.popup-container');
+                return popupContainer.contains(event.target);
+            }
+
+            // Функция для скрытия всплывающего окна
+            function hidePopup() {
+                const popupContainer = document.querySelector('.popup-container');
+                const popupContent = document.querySelector('.popup-content');
+                popupContainer.classList.remove('active');
+                popupContent.style.opacity = 0;
+                popupContent.style.transform = 'scale(0.8)';
+
+                // Задержка для завершения анимации перед скрытием окна
+                setTimeout(() => {
+                    popupContainer.style.display = 'none';
+                }, 300); // Время анимации в миллисекундах, должно соответствовать времени анимации в CSS (0.3s)
+
+                
+            }
+
+            
+
+            // Обработчик события клика на весь документ
+            document.addEventListener('click', function(event) {
+                if (!isClickInsidePopup(event)) {
+                    hidePopup(); // Если клик был вне pop-up окна и за его контейнером, скрываем его
+                }
+            });
+
+            const myButton = document.getElementById('commButton');
+    
+            // Обработчик событий для кнопок "Добавить комментарий"
+            document.querySelectorAll('.new_comment').forEach((button) => {
+                button.addEventListener('click', (event) => {
+
+                    
+                    event.stopPropagation();
+                    let uProductID = null;
+                    let uVehID = null;
+                    
+                    
+                    uProductID = button.getAttribute('data-product');
+                    uVehID = button.getAttribute('data-veh');
+                   
+                    showPopup(uProductID, uVehID);
+                });
+            });
+
+            
+
+            document.querySelector('.overlay').addEventListener('click', function() {
+                hidePopup();
+            });
+
+            // Обработчик события для закрытия pop-up окна при клике на кнопку закрытия
+            document.getElementById("add-close").addEventListener("click", function() {
+                hidePopup();
+            });
+
+        });
+    </script>
+    
+    
+    <script>
+
+        const popup1 = document.querySelector(".popup-container-wrapper-log");
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            function showPopup(procedure, veh) {
+                
+
+                const popupContainer = document.querySelector('.popup-container-log');
+                const popupContent = document.querySelector('.popup-content-log');
+                popupContainer.style.display = 'flex';
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url "comment_history" %}',
+                    data: {
+                        procedure: procedure,
+                        veh: veh,
+                    },
+                    success: function (data) {
+                        // Clear the existing content in the comment history table
+                        const commentHistoryBody = document.getElementById('comment-history-body');
+                        commentHistoryBody.innerHTML = '';
+
+                        // Loop through the fetched data and create new rows for each comment
+                        data.forEach((comment) => {
+                            const newRow = document.createElement('tr');
+                            newRow.innerHTML = `
+                                <td>${comment.date}</td>
+                                <td>${comment.text}</td>
+                            `;
+                            commentHistoryBody.appendChild(newRow);
+                        });
+
+                        requestAnimationFrame(() => {
+                            popupContainer.classList.add('active');
+                            popupContent.style.opacity = 1;
+                            popupContent.style.transform = 'scale(1)';
+                        });  
+                    },
+                    error: function (error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+            }
+
+            
+            function isClickInsidePopup(event) {
+                const popupContainer = document.querySelector('.popup-container-log');
+                return popupContainer.contains(event.target);
+            }
+
+            function hidePopup() {
+                const popupContainer = document.querySelector('.popup-container-log');
+                const popupContent = document.querySelector('.popup-content-log');
+                popupContainer.classList.remove('active');
+                popupContent.style.opacity = 0;
+                popupContent.style.transform = 'scale(0.8)';
+  
+                setTimeout(() => {
+                    popupContainer.style.display = 'none';
+                }, 300); // Время анимации в миллисекундах, должно соответствовать времени анимации в CSS (0.3s)  
+            }
+ 
+            document.addEventListener('click', function(event) {
+                if (!isClickInsidePopup(event)) {
+                    hidePopup(); 
+                }
+            }); 
+            document.querySelectorAll('.show_log').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    const procedure = button.getAttribute('data-product');
+                    const veh = button.getAttribute('data-veh');
+                    showPopup(procedure, veh);
+                });
+            });
+            document.querySelector('.overlay-log').addEventListener('click', function() {
+                hidePopup();
+            });
+            document.getElementById("log-close").addEventListener("click", function() {
+                hidePopup();
+            });
+
+        });
+    </script>
+
+
+
+    <script>
+        function toggleProducts(button, procedure) { 
+            const productRows = document.querySelectorAll(`tr.product-row[data-parent="${procedure}"]`);
+            productRows.forEach((row) => row.classList.toggle('hidden'));
+
+            
+            const arrowButton = button.querySelector('.toggle-button');
+            const anyVisible = Array.from(productRows).some((row) => !row.classList.contains('hidden'));
+            arrowButton.classList.toggle('flipped', anyVisible);
+        }
+        document.querySelectorAll('.new_comment, .show_log, .edit-button').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script>
+        $(document).ready(function() {
+            const formSuccess = '{{ form_success }}';
+            if (formSuccess) {
+                const successNotification = $('#success-notification');
+                successNotification.slideDown();
+                setTimeout(function() {
+                    successNotification.slideUp();
+                }, 1500);
+            } else {
+                const errorNotification = $('#error-notification');
+                errorNotification.slideDown();
+                setTimeout(function() {
+                    errorNotification.slideUp();
+                }, 1500);
+            }
+        });
+    </script>
+
+{% endblock %}

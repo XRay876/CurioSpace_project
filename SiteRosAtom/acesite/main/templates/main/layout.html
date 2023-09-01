@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock%}</title>
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <aside>
+        <img class="image_ase" src="{% static 'main/img/ase-logo-new@2x.png' %}">
+        <span class="logo"></span>
+        <h3>Навигация</h3>
+        <ul>
+            <a href="{% url 'home' %}">
+                <li><i class="fas fa-table"></i> Вся база данных</li>
+            </a>
+            <a href="{% url 'about' %}">
+                <li><i class="fas fa-align-center"></i> Заполнение базы</li>
+            </a>
+            <a href="{% url 'diagram' %}">
+                <li><i class="fas fa-stopwatch"></i> Дедлайны</li>
+            </a>
+            <a href="{% url 'report' %}">
+                <li><i class="fas fa-bullhorn"></i> Отчитаться по проекту</li>
+            </a>
+        </ul>
+    </aside>
+
+    <main>
+        {% block content %}
+        {% endblock%}
+    </main>
+
+</body>
+
+</html>

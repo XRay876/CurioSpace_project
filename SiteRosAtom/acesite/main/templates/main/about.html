@@ -1,0 +1,230 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Form{% endblock %}
+
+{% block content %}
+    
+<div class="features_about">
+    <center>
+        <h1>Форма для</h1>
+
+        <div id="form-container" class="form-wrapper">
+            
+            <form id="my-form" method="post">
+                <div class="form-row">
+                    <select name="table" id="table-select" class="form-input-tablename">
+                        <option value="fill_TODO" {% if selected_table == 'fill_TODO' %}selected{% endif %}>0_TODO</option>
+                        <option value="System" {% if selected_table == 'System' %}selected{% endif %}>1_Система</option>
+                        <option value="Modules" {% if selected_table == 'Modules' %}selected{% endif %}>2_Модули</option>
+                        <option value="Products" {% if selected_table == 'Products' %}selected{% endif %}>Продукты</option>
+                        <option value="ArchLayout" {% if selected_table == 'ArchLayout' %}selected{% endif %}>ArchLayout</option>
+                        <option value="ProductsVeh" {% if selected_table == 'ProductsVeh' %}selected{% endif %}>Продукты Вехи</option>
+                        <option value="ProductsVnedr" {% if selected_table == 'ProductsVnedr' %}selected{% endif %}>Продукты Внедрения</option>
+                        <option value="Resources" {% if selected_table == 'Resources' %}selected{% endif %}>Ресурсы</option>
+                    </select>
+                </div>
+
+                {% csrf_token %}
+
+                <div id="fields-container">
+                    <!-- Поля для fill_TODO -->
+                    <div id="fill-todo-fields" class="form-fields">
+                        {{ fill_TODO_form.as_p }}
+                        {% if fill_TODO_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in fill_TODO_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Поля для System -->
+                    <div id="system-fields" class="form-fields">
+                        {{ system_form.as_p }}
+                        {% if system_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in system_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Поля для Modules -->
+                    <div id="modules-fields" class="form-fields">
+                        {{ modules_form.as_p }}
+                        {% if modules_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in modules_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Поля для Products -->
+                    <div id="products-fields" class="form-fields">
+                        {{ products_form.as_p }}
+                        {% if products_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in products_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div> 
+
+                    <!-- Поля для ArchLayout -->
+                    <div id="archlayout-fields" class="form-fields">
+                        {{ arch_layout_form.as_p }}
+                        {% if arch_layout_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in arch_layout_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div> 
+
+                    <!-- Поля для ProductsVeh -->
+                    <div id="productsveh-fields" class="form-fields">
+                        {{ products_veh_form.as_p }}
+                        {% if products_veh_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in products_veh_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div> 
+
+                    <!-- Поля для ProductsVnedr -->
+                    <div id="productsvnedr-fields" class="form-fields">
+                        {{ products_vnedr_form.as_p }}
+                        {% if products_vnedr_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in products_vnedr_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div> 
+
+                    <!-- Поля для заполнения Resources -->
+                    <div id="resources-fields" class="form-fields">
+                        {{ resources_form.as_p }}
+                        {% if resources_form_errors %}
+                            <p>Ошибка: Неправильно введены следующие параметры -></p>
+                            <ul class="errorlist">
+                                {% for error in resources_form_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div> 
+
+                </div>
+
+                <input type="submit" name="fill" value="Заполнить" class="form-submit">
+            </form>
+
+            <div id="form-errors">
+                {% if form_success %}
+                    <div id="success-notification" class="notification success-notification">
+                        <p class="notification-message">Форма успешно заполнена!</p>
+                    </div>
+                {% else %}
+                    <div id="error-notification" class="notification error-notification">
+                        <p class="notification-message">Ошибка!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </center>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const tableSelect = $('#table-select');
+        const fieldsContainer = $('#fields-container');
+
+        function showFields(selectedTable) {
+            // Скрыть все поля
+            $('.form-fields').hide();
+            // Отключить все поля
+            $('.form-fields :input').prop('disabled', true);
+
+            // Показать поля для выбранной таблицы
+            if (selectedTable === 'fill_TODO') {
+                $('#fill-todo-fields').show();
+                $('#fill-todo-fields :input').prop('disabled', false);
+            } else if (selectedTable === 'System') {
+                $('#system-fields').show();
+                $('#system-fields :input').prop('disabled', false);
+            } else if (selectedTable === 'Modules') {
+                $('#modules-fields').show();
+                $('#modules-fields :input').prop('disabled', false);
+            } else if (selectedTable === 'Products') {
+                $('#products-fields').show();
+                // Включить поля формы Products
+                $('#products-fields :input').prop('disabled', false);
+                // Включить требование заполнения полей uStartTime и uStopTime
+                // $('#products-fields :input[name="uStartTime"]').prop('required', true);
+                // $('#products-fields :input[name="uStopTime"]').prop('required', true);
+            } else if (selectedTable === 'ArchLayout') {
+                $('#archlayout-fields').show();
+                $('#archlayout-fields :input').prop('disabled', false);
+            } else if (selectedTable === 'ProductsVeh') {
+                $('#productsveh-fields').show();
+                $('#productsveh-fields :input').prop('disabled', false);
+                // $('#products-fields :input[name="uVehDate"]').prop('required', true);
+            } else if (selectedTable === 'ProductsVnedr') {
+                $('#productsvnedr-fields').show();
+                $('#productsvnedr-fields :input').prop('disabled', false);
+                // $('#products-fields :input[name="uVnedrStartTime"]').prop('required', true);
+                // $('#products-fields :input[name="uVnedrStopTime"]').prop('required', true);
+            } else if (selectedTable === 'Resources') {
+                $('#resources-fields').show();
+                $('#resources-fields :input').prop('disabled', false);
+            }
+        }
+
+        tableSelect.on('change', function() {
+            const selectedTable = tableSelect.val();
+            showFields(selectedTable);
+        });
+
+        // Показать поля для выбранной таблицы при загрузке страницы
+        const selectedTable = tableSelect.val();
+        showFields(selectedTable);
+
+        // Обработчик события успешного заполнения формы
+        const formSuccess = '{{ form_success }}';
+        if (formSuccess) {
+            const successNotification = $('#success-notification');
+            successNotification.slideDown();
+            setTimeout(function() {
+                successNotification.slideUp();
+            }, 1500);
+        } else {
+            const errorNotification = $('#error-notification');
+            errorNotification.slideDown();
+            setTimeout(function() {
+                errorNotification.slideUp();
+            }, 1500);
+        }
+    });
+</script>
+
+
+{% endblock %}
